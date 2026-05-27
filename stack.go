@@ -1,10 +1,6 @@
 package goque
 
 import (
-	"bytes"
-	"encoding/gob"
-	"encoding/json"
-	"os"
 	"sync"
 
 	"github.com/syndtr/goleveldb/leveldb"
@@ -23,87 +19,53 @@ type Stack struct {
 // OpenStack opens a stack if one exists at the given directory. If one
 // does not already exist, a new stack is created.
 func OpenStack(dataDir string) (*Stack, error) {
-	var err error
+	_ = "STUB: not implemented"
 
 	// Create a new Stack.
-	s := &Stack{
-		DataDir: dataDir,
-		db:      &leveldb.DB{},
-		head:    0,
-		tail:    0,
-		isOpen:  false,
-	}
-
-	// Open database for the stack.
-	s.db, err = leveldb.OpenFile(dataDir, nil)
-	if err != nil {
-		return s, err
-	}
-
-	// Check if this Goque type can open the requested data directory.
-	ok, err := checkGoqueType(dataDir, goqueStack)
-	if err != nil {
-		return s, err
-	}
-	if !ok {
-		return s, ErrIncompatibleType
-	}
-
-	// Set isOpen and return.
-	s.isOpen = true
-	return s, s.init()
+	return nil, nil
 }
+
+// Open database for the stack.
+
+// Check if this Goque type can open the requested data directory.
+
+// Set isOpen and return.
 
 // Push adds an item to the stack.
 func (s *Stack) Push(value []byte) (*Item, error) {
-	s.Lock()
-	defer s.Unlock()
+	_ = "STUB: not implemented"
+	return nil,
 
-	// Check if stack is closed.
-	if !s.isOpen {
-		return nil, ErrDBClosed
-	}
-
-	// Create new Item.
-	item := &Item{
-		ID:    s.head + 1,
-		Key:   idToKey(s.head + 1),
-		Value: value,
-	}
-
-	// Add it to the stack.
-	if err := s.db.Put(item.Key, item.Value, nil); err != nil {
-		return nil, err
-	}
-
-	// Increment head position.
-	s.head++
-
-	return item, nil
+		// Check if stack is closed.
+		nil
 }
+
+// Create new Item.
+
+// Add it to the stack.
+
+// Increment head position.
 
 // PushString is a helper function for Push that accepts a
 // value as a string rather than a byte slice.
 func (s *Stack) PushString(value string) (*Item, error) {
-	return s.Push([]byte(value))
+	_ = "STUB: not implemented"
+	return nil,
+
+		// PushObject is a helper function for Push that accepts any
+		// value type, which is then encoded into a byte slice using
+		// encoding/gob.
+		//
+		// Objects containing pointers with zero values will decode to nil
+		// when using this function. This is due to how the encoding/gob
+		// package works. Because of this, you should only use this function
+		// to encode simple types.
+		nil
 }
 
-// PushObject is a helper function for Push that accepts any
-// value type, which is then encoded into a byte slice using
-// encoding/gob.
-//
-// Objects containing pointers with zero values will decode to nil
-// when using this function. This is due to how the encoding/gob
-// package works. Because of this, you should only use this function
-// to encode simple types.
 func (s *Stack) PushObject(value interface{}) (*Item, error) {
-	var buffer bytes.Buffer
-	enc := gob.NewEncoder(&buffer)
-	if err := enc.Encode(value); err != nil {
-		return nil, err
-	}
-
-	return s.Push(buffer.Bytes())
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // PushObjectAsJSON is a helper function for Push that accepts any
@@ -112,115 +74,73 @@ func (s *Stack) PushObject(value interface{}) (*Item, error) {
 //
 // Use this function to handle encoding of complex types.
 func (s *Stack) PushObjectAsJSON(value interface{}) (*Item, error) {
-	jsonBytes, err := json.Marshal(value)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.Push(jsonBytes)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Pop removes the next item in the stack and returns it.
 func (s *Stack) Pop() (*Item, error) {
-	s.Lock()
-	defer s.Unlock()
+	_ = "STUB: not implemented"
+	return nil,
 
-	// Check if stack is closed.
-	if !s.isOpen {
-		return nil, ErrDBClosed
-	}
-
-	// Try to get the next item in the stack.
-	item, err := s.getItemByID(s.head)
-	if err != nil {
-		return nil, err
-	}
-
-	// Remove this item from the stack.
-	if err := s.db.Delete(item.Key, nil); err != nil {
-		return nil, err
-	}
-
-	// Decrement head position.
-	s.head--
-
-	return item, nil
+		// Check if stack is closed.
+		nil
 }
+
+// Try to get the next item in the stack.
+
+// Remove this item from the stack.
+
+// Decrement head position.
 
 // Peek returns the next item in the stack without removing it.
 func (s *Stack) Peek() (*Item, error) {
-	s.RLock()
-	defer s.RUnlock()
+	_ = "STUB: not implemented"
+	return nil,
 
-	// Check if stack is closed.
-	if !s.isOpen {
-		return nil, ErrDBClosed
-	}
-
-	return s.getItemByID(s.head)
+		// Check if stack is closed.
+		nil
 }
 
 // PeekByOffset returns the item located at the given offset,
 // starting from the head of the stack, without removing it.
 func (s *Stack) PeekByOffset(offset uint64) (*Item, error) {
-	s.RLock()
-	defer s.RUnlock()
+	_ = "STUB: not implemented"
+	return nil,
 
-	// Check if stack is closed.
-	if !s.isOpen {
-		return nil, ErrDBClosed
-	}
-
-	return s.getItemByID(s.head - offset)
+		// Check if stack is closed.
+		nil
 }
 
 // PeekByID returns the item with the given ID without removing it.
 func (s *Stack) PeekByID(id uint64) (*Item, error) {
-	s.RLock()
-	defer s.RUnlock()
+	_ = "STUB: not implemented"
+	return nil,
 
-	// Check if stack is closed.
-	if !s.isOpen {
-		return nil, ErrDBClosed
-	}
-
-	return s.getItemByID(id)
+		// Check if stack is closed.
+		nil
 }
 
 // Update updates an item in the stack without changing its position.
 func (s *Stack) Update(id uint64, newValue []byte) (*Item, error) {
-	s.Lock()
-	defer s.Unlock()
+	_ = "STUB: not implemented"
+	return nil,
 
-	// Check if stack is closed.
-	if !s.isOpen {
-		return nil, ErrDBClosed
-	}
-
-	// Check if item exists in stack.
-	if id > s.head || id <= s.tail {
-		return nil, ErrOutOfBounds
-	}
-
-	// Create new Item.
-	item := &Item{
-		ID:    id,
-		Key:   idToKey(id),
-		Value: newValue,
-	}
-
-	// Update this item in the stack.
-	if err := s.db.Put(item.Key, item.Value, nil); err != nil {
-		return nil, err
-	}
-
-	return item, nil
+		// Check if stack is closed.
+		nil
 }
+
+// Check if item exists in stack.
+
+// Create new Item.
+
+// Update this item in the stack.
 
 // UpdateString is a helper function for Update that accepts a value
 // as a string rather than a byte slice.
 func (s *Stack) UpdateString(id uint64, newValue string) (*Item, error) {
-	return s.Update(id, []byte(newValue))
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // UpdateObject is a helper function for Update that accepts any
@@ -232,12 +152,8 @@ func (s *Stack) UpdateString(id uint64, newValue string) (*Item, error) {
 // package works. Because of this, you should only use this function
 // to encode simple types.
 func (s *Stack) UpdateObject(id uint64, newValue interface{}) (*Item, error) {
-	var buffer bytes.Buffer
-	enc := gob.NewEncoder(&buffer)
-	if err := enc.Encode(newValue); err != nil {
-		return nil, err
-	}
-	return s.Update(id, buffer.Bytes())
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // UpdateObjectAsJSON is a helper function for Update that accepts
@@ -246,70 +162,34 @@ func (s *Stack) UpdateObject(id uint64, newValue interface{}) (*Item, error) {
 //
 // Use this function to handle encoding of complex types.
 func (s *Stack) UpdateObjectAsJSON(id uint64, newValue interface{}) (*Item, error) {
-	jsonBytes, err := json.Marshal(newValue)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.Update(id, jsonBytes)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Length returns the total number of items in the stack.
-func (s *Stack) Length() uint64 {
-	return s.head - s.tail
-}
+func (s *Stack) Length() uint64 { _ = "STUB: not implemented"; return 0 }
 
 // Close closes the LevelDB database of the stack.
-func (s *Stack) Close() error {
-	s.Lock()
-	defer s.Unlock()
+func (s *Stack) Close() error { _ = "STUB: not implemented"; return nil }
 
-	// Check if stack is already closed.
-	if !s.isOpen {
-		return nil
-	}
+// Check if stack is already closed.
 
-	// Close the LevelDB database.
-	if err := s.db.Close(); err != nil {
-		return err
-	}
+// Close the LevelDB database.
 
-	// Reset stack head and tail and set
-	// isOpen to false.
-	s.head = 0
-	s.tail = 0
-	s.isOpen = false
-
-	return nil
-}
+// Reset stack head and tail and set
+// isOpen to false.
 
 // Drop closes and deletes the LevelDB database of the stack.
-func (s *Stack) Drop() error {
-	if err := s.Close(); err != nil {
-		return err
-	}
-
-	return os.RemoveAll(s.DataDir)
-}
+func (s *Stack) Drop() error { _ = "STUB: not implemented"; return nil }
 
 // getItemByID returns an item, if found, for the given ID.
 func (s *Stack) getItemByID(id uint64) (*Item, error) {
+	_ = "STUB: not implemented"
 	// Check if empty or out of bounds.
-	if s.Length() == 0 {
-		return nil, ErrEmpty
-	} else if id <= s.tail || id > s.head {
-		return nil, ErrOutOfBounds
-	}
-
-	// Get item from database.
-	var err error
-	item := &Item{ID: id, Key: idToKey(id)}
-	if item.Value, err = s.db.Get(item.Key, nil); err != nil {
-		return nil, err
-	}
-
-	return item, nil
+	return nil, nil
 }
+
+// Get item from database.
 
 // init initializes the stack data.
 func (s *Stack) init() error {
